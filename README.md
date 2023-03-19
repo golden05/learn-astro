@@ -1,1 +1,1 @@
-# To learn astro
+# To learn Astro
