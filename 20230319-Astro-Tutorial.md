@@ -13,16 +13,16 @@ version: 2.1
 - Add interactivity to your site.
 - deploy your site to the web
 
-# setup
+## setup
 
-# Launch the Astro setup wizard
+## Launch the Astro setup wizard
 
 ```
 npm create astro@latest
 npm run dev
 ```
 
-# edit your home page : index.astro
+## edit your home page : index.astro
 
 ```astro
 <html lang="en">
@@ -37,10 +37,9 @@ npm run dev
     <h1>My Astro Site</h1>
   </body>
 </html>
-
 ```
 
-# Create a new **.astro** file
+## Create a new **.astro** file
 
 under **src/pages/** create a new file named **about.astro**.
 
@@ -165,37 +164,61 @@ use Astro own <style></style>, adding attributes and directives to these tags
 
 ## Use your first CSS variable
 
-<style> tag can reference any variable from your frontmatter script 
+an style tag can reference any variable from your frontmatter script 
+
 ```
 ---
 const skillColor = "navy";
 ---
-
 <style define:vars={{skillColor}}>
   .skill {
       color: var(--skillColor);
     }
 </style>
-
 ```
 
 # Add a global stylesheet
 create a new file at the location **src/styles/global.css** , global.css like this:
-```
 
+
+```
 html {
 background-color: red;
 font-family: sans-serif;
 }
-
 ```
+
 in the **about.astro** , import to the frontmatter
-```
 
+```
 ---
-
 ## import '../styles/global.css';
-
+---
 ```
 
+# Components
+reuse code for common elements
+- A Navigation component that present menu
+- A Footer component that
+- A Social Media component, used in the Footer or right-top
+- An interactive Hamburger component to toggle the Navigation or mobile
+
+## A Navigation component
+- create a new folder **src/components** for components
+- build an Astro component
+- Replace existing HTML with a new Navigation component
+
+a new component file  **Navigation.astro** like this:
+
+```
+<a href="/">Home</a>
+<a href="/about">About</a>
+```
+
+## import and use Navigation.astro
+
+```
+---
+## import Navigation from '../components/Navigation.astro'
+---
 ```
