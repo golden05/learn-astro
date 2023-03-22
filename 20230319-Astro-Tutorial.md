@@ -4,7 +4,9 @@ tags: [Astro]
 version: 2.1
 ---
 
-# Build first Astro Blog
+# Add, style and link to page on your site
+
+## Build first Astro Blog
 
 - setup your development environment
 - create pages and blog posts for your website.
@@ -13,16 +15,14 @@ version: 2.1
 - Add interactivity to your site.
 - deploy your site to the web
 
-## setup
-
-## Launch the Astro setup wizard
+### Launch the Astro setup wizard
 
 ```
 npm create astro@latest
 npm run dev
 ```
 
-## edit your home page : index.astro
+### edit your home page : index.astro
 
 ```astro
 <html lang="en">
@@ -39,7 +39,7 @@ npm run dev
 </html>
 ```
 
-## Create a new **.astro** file
+### Create a new **.astro** file
 
 under **src/pages/** create a new file named **about.astro**.
 
@@ -52,19 +52,19 @@ under **src/pages/** create a new file named **about.astro**.
 </body>
 ```
 
-# Add navigation links
+### Add navigation links
 
 ```
 <a href="/">Home</a>
 <a href="/about">About</a>
 ```
 
-# write first markdown blog post
+## write first markdown blog post
 
 create a new directory at **src/pages/posts/**, add a new file post-1.md
 browser adding \*\*/posts/post-1
 
-## content:
+### content:
 
 ```
 ---
@@ -80,7 +80,7 @@ tags: ["astro", "blogging", "learn in publicity"]
 # My first blog post
 ```
 
-## Link to your blog posts
+### Link to your blog posts
 
 ```
 <ul>
@@ -88,9 +88,9 @@ tags: ["astro", "blogging", "learn in publicity"]
 </ul>
 ```
 
-# Add dynamic content about you
+## Add dynamic content about you
 
-## Define and use a variable
+### Define and use a variable
 
 add Javascript in the **about.astro** in the frontmatter script
 and use it in body section
@@ -103,7 +103,7 @@ const pageTitle = "About Me";
 
 ```
 
-## write Javascript expressions in Astro
+### write Javascript expressions in Astro
 
 add the following JavaScript expressions to your frontmatter.
 
@@ -137,9 +137,9 @@ const goal = 3;
 { goal === 3 ? <p>My goal is 3</p> : <p>My goal isn't 3</p> }
 ```
 
-# Style your About page
+## Style your About page
 
-## Style an individual page
+### Style an individual page
 
 use Astro own <style></style>, adding attributes and directives to these tags
 
@@ -162,7 +162,7 @@ use Astro own <style></style>, adding attributes and directives to these tags
 </ul>
 ```
 
-## Use your first CSS variable
+### Use your first CSS variable
 
 an style tag can reference any variable from your frontmatter script
 
@@ -177,7 +177,9 @@ const skillColor = "navy";
 </style>
 ```
 
-# Add a global stylesheet
+## Add site-wide styling
+
+### Add a global stylesheet
 
 create a new file at the location **src/styles/global.css** , global.css like this:
 
@@ -205,7 +207,7 @@ reuse code for common elements
 - A Social Media component, used in the Footer or right-top
 - An interactive Hamburger component to toggle the Navigation or mobile
 
-## A Navigation component
+## make a reusable Navigation component
 
 - create a new folder **src/components** for components
 - build an Astro component
@@ -218,7 +220,7 @@ a new component file **Navigation.astro** like this:
 <a href="/about">About</a>
 ```
 
-## import and use Navigation.astro
+### import and use Navigation.astro
 
 ```
 ---
@@ -227,9 +229,9 @@ a new component file **Navigation.astro** like this:
 <Navigation />
 ```
 
-# Create a social media footer
+## Create a social media footer
 
-## Create a Footer Component
+### Create a Footer Component
 
 Create a new file in the location **src/components/Footer.astro**
 
@@ -243,26 +245,26 @@ const username = "withAstro";
 </footer>
 ```
 
-## import and use **Footer.astro**
+### import and use **Footer.astro**
 
 ```
 import Footer from '../components/Footer.astro';
 <Footer />
 ```
 
-## Create a Social Media component
+### Create a Social Media component
 
 each time you will pass it different properties { props }
 create a new file in the location **src/components/Social.astro**
 
 ```
 ---
-const {platform, username} ] Astro.props;
+const {platform, username} = Astro.props;
 ---
 <a href='https://www.${platform}.com/${username}'}>{platform}</a>
 ```
 
-## import and use **Social.astro**
+### import and use **Social.astro**
 
 ```
 ---
@@ -273,11 +275,37 @@ import Social from './Social.astro';
 </footer>
 ```
 
-# Send your first script to the browser
+## Build it yourself - Header
+
+### Build a new Header component
+
+create a file named **Header.astro** in **src/components/**
+
+```
+---
+import Navigation from './Navigation.astro'
+---
+<header>
+  <nav>
+    <Navigation />
+  </nav>
+</header>
+```
+
+### Update your page: **src/pages/index.astro**
+
+```
+---
+import Header from '../components/Header.astro';
+---
+<Header />
+```
+
+## Send your first script to the browser
 
 add a hamburger menu to open and close your links on mobile screen sizes. requiring some clientside interactivity.
 
-## build a Hamburger component
+### build a Hamburger component
 
 create a new file named **Hamburger.astro** in **src/components**
 
@@ -289,7 +317,7 @@ create a new file named **Hamburger.astro** in **src/components**
 </div>
 ```
 
-## write your first script tag
+### write your first script tag
 
 in the file **src/pages/index.astro**
 
@@ -310,10 +338,11 @@ in the file **src/pages/index.astro**
 create a new file in the location **src/layouts/BaseLayout.astro**
 and in your home page use **import BaseLayout from "";**
 
-### Pass page-specific values as props
+### Pass page-specific values as props: **src/pages/index.astro**
 
 ```
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
 const pageTitle = 'Home Page';
 or
 const pageTitle = Astro.props;
@@ -340,14 +369,14 @@ Add to the post-1.md
 ```
 ---
 layout: ../../layouts/MarkdownPostLayout.astro
---
+---
 ```
 
-# Combine layouts to get the best
+## Combine layouts to get the best
 
-## Nest your two layouts
+### Nest your two layouts
 
-tow layout file : **BaseLayout.astro** and **MarkdownPostLayout.astro**
+two layout file : **BaseLayout.astro** and **MarkdownPostLayout.astro**
 in the MarkdownPostLayout.astro
 
 ```
@@ -401,3 +430,5 @@ const { tag } = Astro.params;
 <BaseLayout pageTitle={tag}>
 
 ```
+
+### Use props in dynamic routes
