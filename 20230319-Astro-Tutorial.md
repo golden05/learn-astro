@@ -22,7 +22,7 @@ npm create astro@latest
 npm run dev
 ```
 
-### edit your home page : index.astro
+### edit your home page : `index.astro`
 
 ```astro
 <html lang="en">
@@ -39,9 +39,9 @@ npm run dev
 </html>
 ```
 
-### Create a new **.astro** file
+### Create a new `.astro` file
 
-under **src/pages/** create a new file named **about.astro**.
+under `src/pages/` create a new file named `about.astro`.
 
 ```
 <body>
@@ -61,8 +61,8 @@ under **src/pages/** create a new file named **about.astro**.
 
 ## write first markdown blog post
 
-create a new directory at **src/pages/posts/**, add a new file post-1.md
-browser adding \*\*/posts/post-1
+create a new directory at `src/pages/posts/`, add a new file post-1.md
+browser adding `posts/post-1`
 
 ### content:
 
@@ -92,7 +92,7 @@ tags: ["astro", "blogging", "learn in publicity"]
 
 ### Define and use a variable
 
-add Javascript in the **about.astro** in the frontmatter script
+add Javascript in the `about.astro` in the frontmatter script
 and use it in body section
 
 ```
@@ -181,7 +181,7 @@ const skillColor = "navy";
 
 ### Add a global stylesheet
 
-create a new file at the location **src/styles/global.css** , global.css like this:
+create a new file at the location `src/styles/global.css` , global.css like this:
 
 ```
 html {
@@ -190,7 +190,7 @@ font-family: sans-serif;
 }
 ```
 
-in the **about.astro** , import to the frontmatter
+in the `about.astro` , import to the frontmatter
 
 ```
 ---
@@ -209,11 +209,11 @@ reuse code for common elements
 
 ## make a reusable Navigation component
 
-- create a new folder **src/components** for components
+- create a new folder `src/components` for components
 - build an Astro component
 - Replace existing HTML with a new Navigation component
 
-a new component file **Navigation.astro** like this:
+a new component file `Navigation.astro` like this:
 
 ```
 <a href="/">Home</a>
@@ -224,7 +224,7 @@ a new component file **Navigation.astro** like this:
 
 ```
 ---
-## import Navigation from '../components/Navigation.astro'
+## import Navigation from `../components/Navigation.astro`
 ---
 <Navigation />
 ```
@@ -233,7 +233,7 @@ a new component file **Navigation.astro** like this:
 
 ### Create a Footer Component
 
-Create a new file in the location **src/components/Footer.astro**
+Create a new file in the location `src/components/Footer.astro`
 
 ```
 ---
@@ -245,7 +245,7 @@ const username = "withAstro";
 </footer>
 ```
 
-### import and use **Footer.astro**
+### import and use `Footer.astro`
 
 ```
 import Footer from '../components/Footer.astro';
@@ -255,16 +255,16 @@ import Footer from '../components/Footer.astro';
 ### Create a Social Media component
 
 each time you will pass it different properties { props }
-create a new file in the location **src/components/Social.astro**
+create a new file in the location `src/components/Social.astro`
 
 ```
 ---
 const {platform, username} = Astro.props;
----
+---getStaticPaths
 <a href='https://www.${platform}.com/${username}'}>{platform}</a>
 ```
 
-### import and use **Social.astro**
+### import and use `Social.astro`
 
 ```
 ---
@@ -279,7 +279,7 @@ import Social from './Social.astro';
 
 ### Build a new Header component
 
-create a file named **Header.astro** in **src/components/**
+create a file named `Header.astro` in `src/components/`
 
 ```
 ---
@@ -292,7 +292,7 @@ import Navigation from './Navigation.astro'
 </header>
 ```
 
-### Update your page: **src/pages/index.astro**
+### Update your page: `src/pages/index.astro`
 
 ```
 ---
@@ -307,7 +307,7 @@ add a hamburger menu to open and close your links on mobile screen sizes. requir
 
 ### build a Hamburger component
 
-create a new file named **Hamburger.astro** in **src/components**
+create a new file named `Hamburger.astro` in `src/components`
 
 ```
 <div class='hamburger'>
@@ -319,7 +319,7 @@ create a new file named **Hamburger.astro** in **src/components**
 
 ### write your first script tag
 
-in the file **src/pages/index.astro**
+in the file `src/pages/index.astro`
 
 ```
 <script>
@@ -335,8 +335,8 @@ in the file **src/pages/index.astro**
 
 ### Create your first layout component
 
-create a new file in the location **src/layouts/BaseLayout.astro**
-and in your home page use **import BaseLayout from "";**
+create a new file in the location `src/layouts/BaseLayout.astro`
+and in your home page use `import BaseLayout from "";`
 
 ### Pass page-specific values as props: **src/pages/index.astro**
 
@@ -354,7 +354,7 @@ const pageTitle = Astro.props;
 
 ### add a layout to your blog post
 
-create a new file in the location **src/layouts/MarkdownPostLayout.astro**
+create a new file in the location `src/layouts/MarkdownPostLayout.astro`
 
 ```
 ---
@@ -376,7 +376,7 @@ layout: ../../layouts/MarkdownPostLayout.astro
 
 ### Nest your two layouts
 
-two layout file : **BaseLayout.astro** and **MarkdownPostLayout.astro**
+two layout file : `BaseLayout.astro` and `MarkdownPostLayout.astro`
 in the MarkdownPostLayout.astro
 
 ```
@@ -389,15 +389,15 @@ const { frontmatter } = Astro.props;
 
 # Astro API
 
-- **Astro.glob()** to access data from files in your project
-- **getStaticPaths()** to create multiple pages
+- `Astro.glob()` to access data from files in your project
+- `getStaticPaths()` to create multiple pages
 - Astro RSS package to create RSS feed
 
 ## create a blog post archive
 
 ### dynamiclly display list of posts
 
-add following code to **blog.astro** , Astro.glob() will return an array of objects
+add following code to `blog.astro` , Astro.glob() will return an array of objects
 
 ```
 ---
@@ -410,11 +410,11 @@ const allPosts = await Astro.glob('../pages/posts/*.md');
 
 ### dynamic page routing
 
-you can create entire sets of page dynamiclly using **.astro** files that export a **getStaticPaths()**
+you can create entire sets of page dynamiclly using `.astro` files that export a `getStaticPaths()`
 
 ### create pages dynamiclly
 
-1. create a new file at the **src/pages/tags/[tag].astro**, file like this:
+1. create a new file at the `src/pages/tags/[tag].astro`, file like this:
 
 ```
 ---
@@ -432,3 +432,91 @@ const { tag } = Astro.params;
 ```
 
 ### Use props in dynamic routes
+
+1. Add the following props to getStaticPaths() to make data from all your blog posts
+   `src/pages/tags/[tag].astro`
+
+```
+---
+import BaseLayout from '../layout/BaseLayout.astro';
+export async function getStaticPaths(){
+  const allPosts = await Astro.glob('../posts/*.md');
+
+  return [
+    { params: {tag: "astro"}, props: {posts: allPosts}},
+    { params: {tag: "successes"}, props: {posts: allPosts}},
+    { params: {tag: "community"}, props: {posts: allPosts}}
+    ]
+}
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+```
+
+2. Filter your list of posts to only include that contain the page's own tag
+   `src/pages/tags/[tag].astro`
+
+```
+---
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+const filteredPosts = posts.filter((post) => post.frontmatter.tags.includes(tag));
+---
+```
+
+3. you update your HTML template to show a list of each blog post containing the page's own tag
+   `src/pages/tags/[tag].astro`
+
+```
+<BaseLayout pageTitle={tag}>
+  <p>Posts tagged with {tag}</p>
+  <ul>
+    {filteredPosts.map((post) => <li><a href={post.url}>{post.frontmatter.title}</a></li>)}
+  </ul>
+</BaseLayout>
+```
+
+4. refactor this to use your `<BlogPost />` component
+   `src/pages/tags/[tag].astro`
+
+```
+<BaseLayout pageTitle={tag}>
+  <p>Posts tagged with {tag}</p>
+  <ul>
+    {filteredPosts.map((post) => <BlogPost url={post.url} title={post.frontmatter.title}/>}
+  </ul>
+</BaseLayout>
+```
+
+### Advanced Javascript: Generate pages from existing tags
+
+your tag pages are now defined in `[tag].astro`. if add a new tag,
+have to revisit this page and update your page routes.
+
+1. Check that all your blog posts contain tags
+   revisit each of your existing posts
+
+2. Create an array of all your existing tags.
+   `src/pages/tags/[tag].astro`
+
+```
+---
+import BaseLayout from '../layout/BaseLayout.astro';
+export async function getStaticPaths(){
+  const allPosts = await Astro.glob('../posts/*.md');
+  const uniqueTags = [...new Set(allPosts.map(post => post.frontmatter.tags).flat())];
+  return uniqueTags.map((tag) => {
+      const filteredPosts = allPosts.filter((post) => post.frontmatter.tags.includes(tag));
+      return {
+        params: {tag},
+        props: {posts: filteredPosts},
+        };
+    });
+  }
+---
+```
+
+note: `getStaticPaths` function return a list of objects containing:
+
+- `params` : what to call each page route
+- optional `props` :data that you want to pass to those pages
