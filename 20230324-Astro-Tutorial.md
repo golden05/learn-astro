@@ -544,13 +544,50 @@ create a new file at `src/pages/tags/index.astro`
 import BaseLayout from '../../layouts/BaseLayout.astro';
 const tags = ["astro", "successes", "community"];
 const allPosts = await Astro.glob('../posts/*.md');
+const tags = [...new Set(allPosts.map((post) => post.frontmatter.tags).flat())];
 const pageTitle = 'Tag Index';
 ---
 <BaseLayout pageTitle={pageTitle}>
-  <ul>
-    {tags.map((tag) => <li>{tag}</li>)}
-  </ul>
+  <div>
+    {tags.map((tag) => (
+      <p><a href={`/tags/${tag}`}>{tag}</a></p>
+      ))}
+  </div>
 </BaseLayout>
+```
 
+### Add styles to your tag list
+
+#### Add this page to your navigation
+
+`src/components/Navigation.astro` : `<a href="/tags/>Tags</a>`
+
+## Add an RSS feed
+
+### Install Astro RSS package
+
+`npm install @astrojs/rss`
+
+#### Create an `.xml` feed document
+
+1. Create an new file in `src/pages` called `rss.xml.js`
+2. code :
 
 ```
+import rss, { pagesGlobToRssItems } from '@astrojs/rss';
+export async function get(){
+    return rss({
+        title: 'Astro Learner',
+        description: 'Astro Learning Blog',
+        site: 'https://astrojs.orr',
+        items: await pagesGlobToRssItems(import.meta.glob('./**/*.md')),
+        customData: `<language>en-us</language>`,
+      });
+  }
+
+
+npm run build
+npm run preview
+```
+
+# Astro Islands
