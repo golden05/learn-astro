@@ -532,3 +532,25 @@ const { posts } = Astro.props;
   {posts.map((post) => <BlogPost url = {post.url} title = {post.frontmatter.title}/>)}
 </ul>
 ```
+
+## Build a tag index page
+
+### Use the `/folder/index.astro` routing pattern
+
+create a new file at `src/pages/tags/index.astro`
+
+```
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const tags = ["astro", "successes", "community"];
+const allPosts = await Astro.glob('../posts/*.md');
+const pageTitle = 'Tag Index';
+---
+<BaseLayout pageTitle={pageTitle}>
+  <ul>
+    {tags.map((tag) => <li>{tag}</li>)}
+  </ul>
+</BaseLayout>
+
+
+```
