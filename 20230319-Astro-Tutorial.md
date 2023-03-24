@@ -493,7 +493,7 @@ const filteredPosts = posts.filter((post) => post.frontmatter.tags.includes(tag)
 your tag pages are now defined in `[tag].astro`. if add a new tag,
 have to revisit this page and update your page routes.
 
-1. Check that all your blog posts contain tags
+1. Check that all your blog posts contain tags in its frontmatter  
    revisit each of your existing posts
 
 2. Create an array of all your existing tags.
@@ -504,7 +504,9 @@ have to revisit this page and update your page routes.
 import BaseLayout from '../layout/BaseLayout.astro';
 export async function getStaticPaths(){
   const allPosts = await Astro.glob('../posts/*.md');
-  const uniqueTags = [...new Set(allPosts.map(post => post.frontmatter.tags).flat())];
+  const uniqueTags = [...new Set(allPosts.map((post) => post.frontmatter.tags).flat())];
+  // leavage map get every post's frontmatter tags and flatten it
+  // leavage Set unique
   return uniqueTags.map((tag) => {
       const filteredPosts = allPosts.filter((post) => post.frontmatter.tags.includes(tag));
       return {
@@ -520,3 +522,13 @@ note: `getStaticPaths` function return a list of objects containing:
 
 - `params` : what to call each page route
 - optional `props` :data that you want to pass to those pages
+
+```
+---
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+<ul>
+  {posts.map((post) => <BlogPost url = {post.url} title = {post.frontmatter.title}/>)}
+</ul>
+```
