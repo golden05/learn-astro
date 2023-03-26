@@ -92,6 +92,9 @@ import MyAstroComponent from '../components/MyAstroComponent.astro';
 
 # Routing
 
+all route according to getStaticPaths() return an array of params's object
+option return an array of props object
+destruct can {} from Astro.params  
 Astro use **file-based routing** to generate your build URLs base file layout.
 
 ## Navigating between pages: use `<a>` elements to navigate between routes
@@ -116,11 +119,14 @@ src/pages/posts/1.md --> mysite.com/posts/1
 ## Dynamic routes
 
 An astro page file can specify dynamic routes parameters in its filename to generate
-For example `src/pages/authors/[author].astro` generate a bio page for every author .
-`author` become a parameter
+For example 'src/pages/authors/[author].astro' generate
+'author' become a parameter
+
+- in SSR mode, a page will be generated on request for any route .
 
 ### Static (SSG) Mode
 
+动态创建的页面和路由会在构建时生成
 a dynamic route must export a `getStaticPaths()` that returns an array of objects with `params` property.
 `[dog].astro` defines the dynamic `dog` in their `params` .
 The page can access this parameter using `Astro.params`.
@@ -138,6 +144,112 @@ export function getStaticPaths(){
   }
 const { lang, version } = Astro.params;
 ---
+```
+
+#### Rest parameters
+
+more flexibility in your URL routing . use a **rest parameter**
+`([...path])` in your `.astro`.
+route 根据文件路径任一层级的多个参数生成
+`src/pages/sequences[...path].astro`
+
+```
+---
+export function getStaticPaths(){
+    return [
+     { params: {path: 'one/two/three' }},
+     { params: {path: 'four' }},
+     { params: {path:  undefined }}
+     ]
+  }
+const { path } = Astro.params;
+---
+```
+
+will generate /sequences/one/two/three, sequences/four,
+and /sequences.(undefined allows it to match top level page)
+
+Rest parameters be used with **named parameters**.
+`/[org]/[repo]/tree/[branch]/[...file]`
+/withastro/astro/tree/main/docs/public/favicon.svg
+
+```
+{
+    org: 'withastro',
+    repo: 'astro',
+    branch: 'main',
+    file: 'docs/public/favicon.svg'
+  }
+```
+
+#### Dynamic pages at multiple levels
+
+in the following example a rest parameter ([...slug]) and **props**
+`getStaticPaths()` generate pages for slugs of different depths.
+
+`src/pages[...slug].astro`
+
+```
+---
+export async function getStaticPaths(){
+    const pages = [
+    {
+        slug: undefined,
+        title: "Astro Store",
+        text: "Welcome to the Astro Store!",
+    },
+    {
+        slug: "products",
+        title: "Astro products",
+        text: "We have lots of products for you",
+    },
+    {
+        slug: "products/astro-handbook",
+        title: "The ultimate Astro handbook",
+        text: "If you want to learn Astro "
+    },
+    ];
+    return pages.map(({slug, title,text}) => {
+        return {
+            params: { slug },
+            props: { title, text },
+          };
+      });
+    }
+
+const { title, text} = Astro.props;
+---
+<html>
+  <head>
+    <title>{title}</title>}
+  </head>
+  <body>
+    <h1>{title}</h1>
+    <p>{text}</p>
+  </body>
+</html>
+```
+
+排序
+
+- 没有路径参数的静态路由优先
+- 使用命名参数的动态路由优先其余参数 rest
+- 其他参数的优先级 rest 最低
+- 平局按字母顺序解决
+- `pages/posts/create.astro` => `/posts/create`
+- `pages/posts/[pid].astro` => `/posts/1`, `/posts/abc`
+- `pages/posts/[...slug].astro` => `/posts/1/2`, `posts/a/b/c`
+
+### Server (SSR) Mode Server-side Rendering
+
+dynamic routes are defined the same way : include `[params]` or `[...path]`
+Since these are not "static" routes, `getStaticPaths` should not be used .
+
+```
+---
+const { resource, id } = Astro.params;
+---
+<h1>{resource}: {id}</h1>}
 ```
 
 # Markdown & MDX
