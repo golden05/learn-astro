@@ -230,20 +230,11 @@ const { title, text} = Astro.props;
 </html>
 ```
 
-排序
-
-- 没有路径参数的静态路由优先
-- 使用命名参数的动态路由优先其余参数 rest
-- 其他参数的优先级 rest 最低
-- 平局按字母顺序解决
-- `pages/posts/create.astro` => `/posts/create`
-- `pages/posts/[pid].astro` => `/posts/1`, `/posts/abc`
-- `pages/posts/[...slug].astro` => `/posts/1/2`, `posts/a/b/c`
-
 ### Server (SSR) Mode Server-side Rendering
 
 dynamic routes are defined the same way : include `[params]` or `[...path]`
 Since these are not "static" routes, `getStaticPaths` should not be used .
+`src/pages/resources/[resource]/[id].astro`
 
 ```
 ---
@@ -251,6 +242,81 @@ const { resource, id } = Astro.params;
 ---
 <h1>{resource}: {id}</h1>}
 ```
+
+`resource` and `id`: `resources/users/1`, `resources/colors/blue`
+
+#### modifying the [...slug] example for SSR
+
+SSR page can't use `getStaticPaths()`, can't receive props.
+`const { slug } = Astro.params;`
+`if (!page) return Astro.redirect("/404");`
+
+## Route Priority Order
+
+- Static routes without path parameters will take precedence
+- Dynamic routes using named parameters
+- Rest parameters have the lowest Priority
+- alphabetically
+
+## Pagination
+
+built-in pagination . will generate common pagination properties, including previous/next page URL
+total number of pages.
+Pagination route name use the same [bracket] syntax as a standard dynamic route.
+`/astronauts/[page].astro` will generate router for `/astronauts/1`.
+where `[page]` is the page number.
+`paginate()` funcwill to generate these pages
+`src/pages/astronauts/[page].astro`
+
+```
+---
+export async function getStaticPaths( { paginate}) {
+    const astronautPage = [{
+        astronaut: 'Noel Aremstrong',
+      },{
+        astronaut: 'Buzz Aldrin',
+      }];
+      return paginate(astronautPage), { pageSize: 2 });
+  }
+const { page } = Astro.props;
+---
+<h1>Page {page.currentPage}</h1>
+<ul>
+  {page.data.map(({ astronaut }) => <li>{astronaut}</li>)}
+</ul>
+```
+
+### the `page` prop
+
+use `paginate()` function , each page will be passed its data via a `page` prop.
+The `page` prop has many useful properties.
+
+- page.data : array containing the page's slice of data that passed to `paginate()`
+- page.url.next : next page
+- page.url.prev : previous page
+
+```
+{page.url.prev ? <a href={page.url.prev}>previous</a> : null}
+{page.url.next ? <a href={page.url.next}>next</a> : null}
+```
+
+### Complete API reference
+
+```
+interface Page<T = any> {
+  data: T[];
+  start: number; end: number; total: number; currentPage: number;
+  size: number; lastPage: number;
+  url {
+      current: string;
+      prev: string | undefined; next: string | undefined;
+    }
+}
+```
+
+### Excluding pages
+
+prefix their name with an underscore `_`
 
 # Markdown & MDX
 
