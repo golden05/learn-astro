@@ -320,6 +320,154 @@ prefix their name with an underscore `_`
 
 # Markdown & MDX
 
+built-in, mdx Markdown support JSX, with [@astro/mdx](https://docs.astro.build/en/guides/integration-guide/mdx/)
+
+## Markdown and MDX Pages
+
+### Content Collections
+
+manage Markdown and MDX in `src/content` folder
+[Content Collections](https://astro.build/content-collections) organize content,validate frontmatter
+
+### file-based Routing
+
+Astro treats any `.md` or `.mdx` file inside of the `src/pages` directory as a page
+example: `src/pages/page-1.md`.
+
+### draft Pages
+
+`draft: true` is an optional frontmatter value as unpublished
+
+#### enable building draft
+
+update `astro.config.mjs` by adding `draft: true` to `markdown`
+
+## Markdown Features
+
+### Frontmatter `layout`
+
+`layout` property to specify : is layout component.
+throuth `Astro.props` can access frontmatter properties:
+
+```
+---
+const {frontmatter} = Astro.props;
+---
+<h1>{frontmatter.title}</h1>
+```
+
+1. access frontmatter by `content` properties
+2. `<slot />` define content position
+
+`frontmatter` has an `astro` property, can include Markdown's `source` and `headers`
+
+```
+"astro" : {
+    "headers": [
+    {
+        "depths": 1,
+        "text": "Astro 0.18 Release",
+        "slug": "astro-018-release"
+    },
+    {
+        ...
+      }
+    ],
+    "source": "# Astro 0.18"
+  },
+  "url": ""
+}
+```
+
+### Heading IDs
+
+all head in md automatically give you anchor links so you can link directly to certain sections of your page
+
+### Escaping special
+
+need to use a different syntax if you want to display them.
+`<` write `&lt;` , `{` write `&lcub;`
+
+## MDX-only Features : Adding Astro [MDX Integration](https://docs.astro.build/en/guide/integrations-guide/mdx/)
+
+`.mdx` file written in [MDX syntax](https://mdxjs.com/docs/what-is-mdx/#mdx-syntax)
+
+### Using Exported Variables in MDX
+
+support `export` statements to add variables to your MDX content.
+these variables can accessible in the template itself and as named properties
+`src/pages/posts/posts-1.mdx`: can export a `title` field or component to use as a heading with
+`{JSX expressions}`:
+
+```
+export const title = 'My first MDX post'
+# {title}
+```
+
+### Using Frontmatter Variables in MDX
+
+support using frontmatter in MDX by default. frontmatter properties just as you would in MD files.
+these variables are accessible to use in the template , in its layout component.
+`src/pages/posts/post-1.mdx`:
+
+```
+---
+layout: '../../layouts/BlogPostLayout.astro'
+title: 'My first MDX support'
+---
+# {frontmatter.title}
+```
+
+### Using Components in MDX
+
+can import and use both Astro Components and UI Framework components in MDX .
+do't forget include a `client:directive` on your UI framework component, if necessary!
+`src/pages/about.mdx`
+
+```
+---
+layout: '../layouts/BaseLayout.astro'
+title: About me
+---
+import Button from '../components/Button.astro';
+import ReactCounter from '../components/ReactCounter.jsx';
+I live on **Mars** but feel free to <Button title="Contact me" />
+<ReactCounter client:load />
+```
+
+### Assigning Custom Components to HTML elements
+
+`src/pages/about.mdx`
+
+```
+import Blockquote from '../components/Blockquote.astro';
+export const components = { blockquote: Blockquote }
+```
+
+## import MDX
+
+can import MD and MDX file directly into your Astro files.
+can use a `import`, or multiple pages with `Astro.glob()`
+
+```
+import * as myPost from '../pages/post/my-post.md';
+const posts = await Astro.glob('../pages/post/*.md');
+```
+
+in MDX files can access properties from both frontmatter and `export` statements.
+
+### Exported properties
+
+the following properties are available in an `.astro` component when using an `import` or `glob()`
+
+- file
+- url
+- frontmatter
+- getHeadings
+- Content
+
+### the `Content` component
+
 # Content Collections
 
 # Script & Event handling
