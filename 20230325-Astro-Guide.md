@@ -470,6 +470,132 @@ the following properties are available in an `.astro` component when using an `i
 
 # Content Collections
 
+## What are Content Collections?
+is an directory inside src/content folder
+a content entry is any piece of content stored in the directory. 
+Content entries are stored as either Markdown or MDX files.
+
+### the ".astro" Directory 
+will updated when `astro dev`, `astro build` 
+`astro sync` to updated `.astro` directory
+
+### Organizing with Multiple Collections
+if two files represent different kinds of content, they belong in different collections. This is important because many features (frontmatter validation) require that all entries in a collection share.
+
+### Organizing with subdirectories 
+cannot nest one collection inside of other. you can subdirectories to organize your content within a collection. like i18.
+
+## Define collections
+create `src/content/config.ts` . Astro will automatically load and use.
+
+### define a collection schema
+schema enforce consistent frontmatter with in a collection. When you define a schema for your collection, Astro will automatically generate and apply a Typescript interface to it. the file like:
+1. import the property utilities from `astro:content`.
+2. Define each collection that you can validate with a schema.
+3. Export a single `collections` object to register your collection
+`src/content/config.ts`
+```
+import { z, defineCollection } from 'astro:content';
+const blogCollection = defineCollection({
+  schema: z.object({
+    title: z.string(),
+    tags: z.array(z.string()),
+    image: z.string().optional(),
+  }),
+});
+export const collections = {
+  'blog' : blogCollection,
+};
+```
+
+### defining datatype with Zod
+Astro use [Zod](https://github.com/colinhacks/zod)to validate every file's frontmatter with a collection.
+
+### Defining custom slugs
+Every content entry generate a URL-friendly `slug` property from its file id. The slug is used to query the entry directly from your collection. in the frontmatter.
+
+## Querying Collections
+Astro provide two functions to query a collection and return one content entries: `getCollection()` and `getEntryBySlug()`.
+```
+import { getCollection, getEntryBySlug } from 'astro:content';
+const allBlogPosts = await getCollection('blog');
+const oneBlogPost = await getEntryBySlug('blog', 'enterprise');
+```
+
+### Filtering collection queries
+`getCollection()` takes an optional "filter" callback that allows you to filter your query based on an entry's id,slug,data properties.
+```
+import { getCollection } from 'astro:content';
+const draftBlogEntries = await getCollection('blog', ({data}) => {
+  return data.draft !== true;
+});
+```
+
+### Using content in Astro templates
+Once you have queried your collection entries, you can access each entry directly inside of your Astro component template. This lets you to render HTML for things like links to your content
+```
+---
+import { getCollection } from 'astro:content';
+const blogEntries = await getCollection('blog');
+---
+<ul>
+  {blogEntries.map(blogPostEntry => {
+    <li>
+      <a href={'/my-blog-url/${blogPostEntry.slug}'}>{blogPostEntry.data.title}</a>
+      <time datetime={blogPostEntry.data.publishedDate.toISOString()}>
+        {blogPostEntry.data.publishedDate.toLocaleDateString()}
+      </time>
+    </li>
+  })}
+</ul>
+```
+
+### Passing content as props 
+a component can also pass entire content entry as a prop. use `CollectionEntry` match name of your collection schema.
+
+```
+import type { CollectionEntry } from 'astro:content';
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+const { post } = Astro.props;
+```
+### rendering content to HTML
+can render a collection entry to HTML using the entry `render()` function. 
+`src/pages/render-example.astro`
+```
+---
+import { getEntryBySlug } from 'astro:content';
+const entry = await getEntryBySlug('blog', 'post-1');
+const { content, headings } = await entry.render();
+---
+<p>Written by: {entry.data.author}</p>
+<Content />
+```
+
+## Generating Routes from content
+need to manually create a new dynamic route to generate for your collection entries. Your dynamic route will map the incoming request param (`Astro.params.slug`) in `src/pages/blog/[...slug].astro`
+
+### building for static output: use `getStaticPaths()`
+`src/pages/posts/[...slug].astro`
+```
+---
+import { getCollection } from 'astro:content';
+export async function getStaticPaths() {
+  const allBlogPosts = await getCollection('blog');
+  return allBlogPosts.map(blogPostEntry => {
+    params: { slug: blogPostEntry.slug }, props: { blogPostEntry }
+  });
+}
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+<h1>{entry.data.title}</h1>
+<Content />
+```
+will generate a new page for every entry in the `blog` collection. For example, an entry at `src/content/blog/hello-world.md` will have a slug of `hello-world`, final URL will be `/posts/hello-world`.
+
+
 # Script & Event handling
 
 # CSS & Styling
