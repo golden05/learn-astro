@@ -221,10 +221,10 @@ a new component file `Navigation.astro` like this:
 ```
 
 ### import and use Navigation.astro
-
+`src/pages/index.astro`
 ```
 ---
-## import Navigation from `../components/Navigation.astro`
+import Navigation from `../components/Navigation.astro`
 ---
 <Navigation />
 ```
