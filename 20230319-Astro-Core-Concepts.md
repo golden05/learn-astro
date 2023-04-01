@@ -1,7 +1,7 @@
 ---
 title: Astro Core Concepts
-tags = [Astro]
-version = 2.1
+tags: [Astro]
+version: 2.1
 ---
 
 # why Astro
