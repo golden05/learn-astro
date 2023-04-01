@@ -1,5 +1,5 @@
 ---
-tags = ['Astro']
+tags = [Astro]
 version = 2.1
 ---
 
