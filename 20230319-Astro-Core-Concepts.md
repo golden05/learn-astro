@@ -39,6 +39,7 @@ other language, astro use javascript ，HTML and CSS
 - MPA server state management vs client state management
 
 # Astro Islands component Islands
+support 'react', 'svelte', 'preact' and 'solidjs'
 
 ## what is an astro island
 

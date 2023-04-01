@@ -4,6 +4,8 @@ tags: [Astro]
 version: 2.1
 ---
 
+# Astro.params and Astro.props differences
+
 # Add, style and link to page on your site
 
 ## Build first Astro Blog
@@ -256,7 +258,7 @@ import Footer from '../components/Footer.astro';
 
 each time you will pass it different properties { props }
 create a new file in the location `src/components/Social.astro`
-
+every time to use `Astro.props`
 ```
 ---
 const {platform, username} = Astro.props;
@@ -303,7 +305,7 @@ import Header from '../components/Header.astro';
 
 ## Send your first script to the browser
 
-add a hamburger menu to open and close your links on mobile screen sizes. requiring some clientside interactivity.
+add a hamburger menu to open and close your links on mobile screen sizes. requiring some client-side interactivity.
 
 ### build a Hamburger component
 
@@ -319,15 +321,21 @@ create a new file named `Hamburger.astro` in `src/components`
 
 ### write your first script tag
 
-in the file `src/pages/index.astro`
+1. in the file `src/scripts/menu.js`:
 
 ```
 <script>
-  document.querySelector('hamburger').addEventListener('click',() => {
+  document.querySelector('.hamburger').addEventListener('click',() => {
       document.querySelector('.nav-links').classList.toggle('expanded');
     });
 </script>
 ```
+
+2. replace content of the `<script>` tag on `index.astro`:
+```
+import "../scripts/menu.js";
+```
+
 
 # Layouts
 
@@ -337,18 +345,23 @@ in the file `src/pages/index.astro`
 
 create a new file in the location `src/layouts/BaseLayout.astro`
 and in your home page use `import BaseLayout from "";`
+in the `src/layouts/BaseLayout.astro` add `<slot />`, then in the `src/pages/index.astro` can inject child content in the layout tag.
 
-### Pass page-specific values as props: **src/pages/index.astro**
-
+### Pass page-specific values as props: `src/pages/index.astro`
 ```
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 const pageTitle = 'Home Page';
-or
-const pageTitle = Astro.props;
 ---
 <BaseLayout pageTitle={pageTitle}>
 ```
+in `src/layouts/BaseLayout.astro`:
+```
+---
+const { pageTitle } = Astro.props;
+---
+```
+
 
 ## create and pass data to a custom blog layout
 
@@ -362,6 +375,7 @@ const {frontmatter} = Astro.props;
 ---
 <h1>{frontmatter.title}</h1>
 <p>Written by {frontmatter.author}</p>
+<slot />
 ```
 
 Add to the post-1.md
@@ -369,6 +383,8 @@ Add to the post-1.md
 ```
 ---
 layout: ../../layouts/MarkdownPostLayout.astro
+title: 'My First Post'
+author: 'Astro Build'
 ---
 ```
 
@@ -377,7 +393,7 @@ layout: ../../layouts/MarkdownPostLayout.astro
 ### Nest your two layouts
 
 two layout file : `BaseLayout.astro` and `MarkdownPostLayout.astro`
-in the MarkdownPostLayout.astro
+`src/layouts/MarkdownPostLayout.astro`
 
 ```
 ---
@@ -395,7 +411,7 @@ const { frontmatter } = Astro.props;
 
 ## create a blog post archive
 
-### dynamiclly display list of posts
+### dynamic display list of posts
 
 add following code to `blog.astro` , Astro.glob() will return an array of objects
 
@@ -410,9 +426,9 @@ const allPosts = await Astro.glob('../pages/posts/*.md');
 
 ### dynamic page routing
 
-you can create entire sets of page dynamiclly using `.astro` files that export a `getStaticPaths()`
+you can create entire sets of page dynamically using `.astro` files that export a `getStaticPaths()`
 
-### create pages dynamiclly
+### create pages dynamically
 
 1. create a new file at the `src/pages/tags/[tag].astro`, file like this:
 
@@ -430,6 +446,7 @@ const { tag } = Astro.params;
 <BaseLayout pageTitle={tag}>
 
 ```
+`getStaticPaths()` will return an array of page routes
 
 ### Use props in dynamic routes
 
@@ -505,8 +522,6 @@ import BaseLayout from '../layout/BaseLayout.astro';
 export async function getStaticPaths(){
   const allPosts = await Astro.glob('../posts/*.md');
   const uniqueTags = [...new Set(allPosts.map((post) => post.frontmatter.tags).flat())];
-  // leavage map get every post's frontmatter tags and flatten it
-  // leavage Set unique
   return uniqueTags.map((tag) => {
       const filteredPosts = allPosts.filter((post) => post.frontmatter.tags.includes(tag));
       return {
@@ -619,8 +634,7 @@ export default function Greeting({messages}){
 ```
 
 - import and use this component in `index.astro`
-  note `client:load` directive to tells Astro to send and rerun its Javascript to the _client_\
-  when the page loads, making the component interactive.
+  note `client:load` directive to tells Astro to send and rerun its Javascript to the _client_ when the page loads, making the component interactive.
   call this a **hydrated** component
 
 ```
