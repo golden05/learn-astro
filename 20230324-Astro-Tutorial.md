@@ -260,7 +260,7 @@ create a new file in the location `src/components/Social.astro`
 ```
 ---
 const {platform, username} = Astro.props;
----getStaticPaths
+---
 <a href='https://www.${platform}.com/${username}'}>{platform}</a>
 ```
 
