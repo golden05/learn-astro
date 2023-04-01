@@ -279,7 +279,7 @@ import Social from './Social.astro';
 
 ### Build a new Header component
 
-create a file named `Header.astro` in `src/components/`
+create a file named `Header.astro` in `src/components/` and nest a file named `Navigation.astro` in it 
 
 ```
 ---
