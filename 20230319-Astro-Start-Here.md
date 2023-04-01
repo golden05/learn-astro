@@ -1,6 +1,7 @@
 ---
-tags = ['Astro']
-version = 2.1
+title: Astro get started
+tags: ['Astro']
+version: 2.1
 ---
 
 # Getting Started
